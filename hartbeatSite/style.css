@@ -2,9 +2,7 @@
 	padding: 0;
 	margin: 0;
 	list-style: none;
-	-moz-box-sizing: border-box; 
 	box-sizing: border-box; 
-	-webkit-font-smoothing: antialiased;
 	border: none;
 	-webkit-text-size-adjust: none;
 }
@@ -13,10 +11,12 @@
 	position: fixed;
 	height: 100vh;
 	width: 100vw;
-	background-color: #cf0000;
+/* 	background-color: #cf0000; */
+	background-color: #4208a6;
 	
-	transition: all 0.2s ease-in-out;
+	transition: all 0.2s 0.4s ease-in-out;
 }
 #puls.active {
-	background-color: #8d0000;
+/* 	background-color: #8d0000; */
+	background-color: #7745cb;
 }

@@ -12,6 +12,7 @@ MQTTClient client;
 unsigned long lastMillis = 0;
 
 int cont = 0;
+int fakeCount = 0;
 
 void setup() {
   Bridge.begin();
@@ -21,7 +22,7 @@ void setup() {
 
   connect();
 
-  //Attach the inttruptions for using the pulsioximeter.   
+  //Attach the inttruptions for using the pulsioximeter.
   pinMode(3, INPUT);
   attachInterrupt(digitalPinToInterrupt(3), readPulsioximeter, RISING);
 
@@ -31,7 +32,7 @@ void setup() {
 void connect() {
   Console.print("connecting...");
   while (!client.connect("arduino", "inspektor1", "inspektor")) {
-    Console.print("."); 
+    Console.print(".");
   }
 
   Console.println("\nconnected!");
@@ -43,21 +44,30 @@ void connect() {
 void loop() {
   client.loop();
 
-  if(!client.connected()) {
+  if (!client.connected()) {
     connect();
   }
 
   // publish a message roughly every second.
-  if(millis() - lastMillis > 1000) {
+  if (millis() - lastMillis > 1000) {
     lastMillis = millis();
-    client.publish("/puls", String(eHealth.getBPM()));
+
+    int bpm = eHealth.getBPM();
+    if (bpm > 0) {
+      bpm += fakeCount;
+    }
+    client.publish("/puls", String(bpm));
+
+
+    Console.print("PRbpm : ");
+    Console.print(bpm);
+    Console.print("\n");
   }
+/*
+  int air = eHealth.getAirFlow();   
+  eHealth.airFlowWave(air); 
+*/
 
-
-  Console.print("PRbpm : "); 
-  Console.print(eHealth.getBPM());
-  Console.print("\n");
-  
 }
 
 void messageReceived(String topic, String payload, char * bytes, unsigned int length) {
@@ -70,12 +80,12 @@ void messageReceived(String topic, String payload, char * bytes, unsigned int le
 
 //Include always this code when using the pulsioximeter sensor
 //=========================================================================
-void readPulsioximeter(){  
+void readPulsioximeter() {
 
   cont ++;
 
   if (cont == 50) { //Get only of one 50 measures to reduce the latency
-    eHealth.readPulsioximeter();  
+    eHealth.readPulsioximeter();
     cont = 0;
   }
 }

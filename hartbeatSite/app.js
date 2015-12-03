@@ -1,6 +1,10 @@
 // required when running on node.js
 // 		var mqtt = require('mqtt');
-var audio = new Audio('hartbeat.aiff');
+var hartbeat_1 = new Audio('1.aiff');
+var hartbeat_2 = new Audio('3.aiff');
+var hartbeat_3 = new Audio('5.aiff');
+var hartbeat_4 = new Audio('9.aiff');
+
 
 var client = mqtt.connect('mqtt://inspektor1:inspektor@broker.shiftr.io', {
   clientId: 'visual'
@@ -18,24 +22,37 @@ client.on('connect', function(){
 });
 
 var lastPuls = 0;
+var currentPuls = 0;
 var interval = null;
 var clear = false;
 var intervalMS = 0;
+var cp = 110;
 
 client.on('message', function(topic, message) {
 //   console.log('new message:', topic, message.toString());
 
   if (topic == '/puls') {
-  	console.log('puls', message.toString());
   	
-  	if (message.toString() == 0) {
+  	
+  	currentPuls = message.toString();
+//   	currentPuls = 50;
+  	
+  	console.log('pulsInput', currentPuls);
+  	
+  	if (currentPuls > 150) {
+	  	currentPuls = currentPuls.substring(1, 3);
+	  	console.log('crop', currentPuls);
+  	}
+  	
+  	
+  	if (currentPuls == 0) {
 	  	clearInterval(interval);
 	  	interval = null;
-  	} else if (lastPuls != message.toString() && message.toString() < 150) {
+  	} else if (lastPuls != currentPuls) {
 	  	clear = true;
-	  	intervalMS = 60/message*1000;
+	  	intervalMS = 60/currentPuls*1000;
 	  	
-	  	console.log('interval', interval);
+// 	  	console.log('interval', interval);
 	  	if (interval == null) {
 		  	interval = setInterval(pulsate, intervalMS);
 	  	}
@@ -43,18 +60,26 @@ client.on('message', function(topic, message) {
   	
   }
 
-  lastPuls = message.toString();
+  lastPuls = currentPuls;
 });
 
 
 function pulsate() {
+	var hartbeat = hartbeat;
+	if (currentPuls < 72) {
+		hartbeat = hartbeat_1;
+	} else if (currentPuls < 78) {
+		hartbeat = hartbeat_2;
+	} else if (currentPuls < 100) {
+		hartbeat = hartbeat_3;
+	} else if (currentPuls < 115){
+		hartbeat = new Audio('9.aiff');
+	}
 	
-	audio.currentTime = 0;
-	audio.play();
+	hartbeat.currentTime = 0;
+	hartbeat.play();
 	
-	setTimeout(function() {
-		$('#puls').toggleClass('active');
-	}, 400);
+	$('#puls').toggleClass('active');
 	
 	if (clear) {
 		clearInterval(interval);
