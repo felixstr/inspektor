@@ -7,16 +7,61 @@
 	-webkit-text-size-adjust: none;
 }
 
+body {
+	height: 1000px;
+}
+
 #puls {
 	position: fixed;
 	height: 100vh;
 	width: 100vw;
 /* 	background-color: #cf0000; */
-	background-color: #4208a6;
+/* 	background-color: #4208a6; */
+	background-color: #ae0c0c;
 	
 	transition: all 0.2s 0.4s ease-in-out;
+	
+	display: none;
 }
 #puls.active {
 /* 	background-color: #8d0000; */
-	background-color: #7745cb;
+	background-color: black;
+}
+
+#screen {
+	position: fixed;
+	width: 100vw;
+	height: 0;
+	bottom: 0;
+	background-color: #df1a0c;
+	
+	transition: all 0.2s 0s ease-in-out;
+}
+
+#screen.active {
+/* 	background-color: #8d0000; */
+	background-color: #91150b;
+}
+
+#puls_text {
+	position: fixed;
+	top: 30vh;
+	left: 0;
+	width: 100vw;
+	text-align: center;
+/* 	font-family: -apple-system; */
+	font-size: 200px;
+	
+	font-family: "Helvetica Neue";
+	font-weight: 300;
+}
+
+button {
+	width:100vw;
+	height: 100vh;
+	font-size: 200px;
+	font-family: "Helvetica Neue";
+	font-weight: 300;
+	background: white;
+	position: fixed;
 }
