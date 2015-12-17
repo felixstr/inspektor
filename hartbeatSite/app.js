@@ -9,6 +9,7 @@ var clear = false;
 var intervalMS = 0;
 var cp = 110;
 var pulsateCounter = 0;
+var tweetCounter = 0;
 
 var client = mqtt.connect('mqtt://inspektor1:inspektor@broker.shiftr.io', {
 	clientId: 'visual'
@@ -56,8 +57,10 @@ function pulsate() {
 	var hartbeat = hartbeat;
 	if (currentPuls < 72) {
 		hartbeat = hartbeat_1;
+		hartbeat = hartbeat_3;
 	} else if (currentPuls < 78) {
 		hartbeat = hartbeat_2;
+		hartbeat = hartbeat_3;
 	} else if (currentPuls < 100) {
 		hartbeat = hartbeat_3;
 	} else {
@@ -69,6 +72,10 @@ function pulsate() {
 	// 	$('#puls').toggleClass('active');
 	$('#screen').toggleClass('active');
 	increaseScreen();
+	
+	 
+	
+	
 	if (clear) {
 		clearInterval(interval);
 		interval = setInterval(pulsate, intervalMS);
@@ -79,21 +86,54 @@ function pulsate() {
 
 function clearScreen() {
 	pulsateCounter = 0;
+	tweetCounter = 0;
+	currentPuls = 0;
 	$('#screen').css('height', '0');
+	$('#tweets').html('Anzahl Tweets: '+tweetCounter);
 }
 
 function increaseScreen() {
 	if (pulsateCounter < 100) {
-		pulsateCounter++;
+		pulsateCounter += 10;
+		$('#screen').removeClass('send');
 		$('#screen').css('height', pulsateCounter + 'vh');
+		
+	} else {
+		pulsateCounter = 0;
+		tweetCounter++;
+		$('#tweets').html('Anzahl Tweets: '+tweetCounter);
+		
+		$('#screen').addClass('send');
+		$('#screen').addClass('transitionS');
+		setTimeout(function() {
+			
+			$('#screen').css('height', pulsateCounter + 'vh');
+			$('#screen').removeClass('transitionS');
+		}, 300);
+		
+		$.ajax("http://felixstricker.ch/zhdk/echo/twitter/send.php?t="+currentPuls+"&c="+pulsateCounter, {
+			type: 'GET',
+			contentType: "application/json",
+			success: function(data, textStatus, jqXHR) {
+				console.log('data', data);
+						
+			},
+			fail: function(error) {
+				console.log('ERROR', error);
+			}
+		});
 	}
+	
+	
 }
 
 $(document).ready(function() {
 	
+/*
 	setInterval(function() {
-		client_message('/puls', '60');
+		client_message('/puls', '55');
 	}, 1000);
+*/
 	
 	$('button').click(function() {
 		// 		alert("audio clicked");

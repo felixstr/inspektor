@@ -9,6 +9,7 @@
 
 body {
 	height: 1000px;
+	background: black;
 }
 
 #puls {
@@ -36,22 +37,72 @@ body {
 	background-color: #df1a0c;
 	
 	transition: all 0.2s 0s ease-in-out;
+	transition-property: height, background;
 }
 
 #screen.active {
-/* 	background-color: #8d0000; */
 	background-color: #91150b;
 }
 
+/*
+#screen.transitionS {
+	transition-property: left;
+}
+#screen.send {
+	left: 100vw;
+}
+*/
+
+#screen.transitionS {	
+	-webkit-transition-duration: 0.4s;
+	-webkit-transition-property: -webkit-transform;
+	transition-property: transform;
+}
+#screen.send {
+	-webkit-transform: translateX(100vw);
+	transform: translateX(100vw);
+}
+
+
 #puls_text {
 	position: fixed;
-	top: 30vh;
+	top: 50px;
+	left: 0;
+	width: 100vw;
+	text-align: center;
+	/* 	font-family: -apple-system; */
+	font-size: 258px;
+	color: white;
+	font-family: "Helvetica Neue";
+	font-weight: 200;
+}
+
+#hashtag {
+	font-size: 130px;
+	
+	position: fixed;
+	top: 370px;
 	left: 0;
 	width: 100vw;
 	text-align: center;
 /* 	font-family: -apple-system; */
-	font-size: 200px;
+	font-size: 130px;
+	color: white;
+	font-family: "Helvetica Neue";
+	font-weight: 300;
+}
+
+#tweets {
+	font-size: 130px;
 	
+	position: fixed;
+	top: 550px;
+	left: 0;
+	width: 100vw;
+	text-align: center;
+	/* 	font-family: -apple-system; */
+	font-size: 80px;
+	color: white;
 	font-family: "Helvetica Neue";
 	font-weight: 300;
 }
